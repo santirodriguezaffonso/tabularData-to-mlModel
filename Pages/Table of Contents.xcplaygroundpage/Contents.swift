@@ -19,3 +19,10 @@ let csvFile = Bundle.main.url(forResource: "twitter-sanders-apple3", withExtensi
 let dataTable = try MLDataTable(contentsOf: csvFile)
 
 let (trainingData, testingData) = dataTable.randomSplit(by: 0.8, seed: 5)
+
+//MARK: Training & Testing Model
+let sentimentClassifier = try MLTextClassifier(trainingData: trainingData, textColumn: "text", labelColumn: "class")
+
+let evaluationMetrics = sentimentClassifier.evaluation(on: testingData, textColumn: "text", labelColumn: "class")
+
+let evaluationAccuracy = (1.0 - evaluationMetrics.classificationError) * 100
