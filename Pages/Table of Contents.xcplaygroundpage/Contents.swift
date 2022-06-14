@@ -20,9 +20,21 @@ let dataTable = try MLDataTable(contentsOf: csvFile)
 
 let (trainingData, testingData) = dataTable.randomSplit(by: 0.8, seed: 5)
 
+
 //MARK: Training & Testing Model
 let sentimentClassifier = try MLTextClassifier(trainingData: trainingData, textColumn: "text", labelColumn: "class")
 
 let evaluationMetrics = sentimentClassifier.evaluation(on: testingData, textColumn: "text", labelColumn: "class")
 
 let evaluationAccuracy = (1.0 - evaluationMetrics.classificationError) * 100
+
+
+//MARK: Saving Model
+let metaData = MLModelMetadata(author: "Santiago R.A.",
+                               shortDescription: "This is a sentiment classifier",
+                               version: "1.0")
+
+let homePath = FileManager.default.homeDirectoryForCurrentUser
+let desktopPath = homePath.appendingPathComponent("Desktop")
+
+try sentimentClassifier.write(to: desktopPath.appendingPathComponent("TwitterSentiment.mlmodel"), metadata: metaData)
