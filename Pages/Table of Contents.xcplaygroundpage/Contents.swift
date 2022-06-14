@@ -12,3 +12,10 @@ Table of Contents
  ****
  [Next](@next)
  */
+import CreateML
+import Foundation
+
+let csvFile = Bundle.main.url(forResource: "twitter-sanders-apple3", withExtension: "csv")!
+let dataTable = try MLDataTable(contentsOf: csvFile)
+
+let (trainingData, testingData) = dataTable.randomSplit(by: 0.8, seed: 5)
